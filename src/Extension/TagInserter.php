@@ -1,28 +1,27 @@
 <?php
 
-namespace SilverStripe\TagManager\Middleware;
+namespace SilverStripe\TagManager\Extension;
 
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Director;
 use SilverStripe\TagManager\Model\Snippet;
+use SilverStripe\Core\Extension;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
- * Middleware that inserts configured snippets
+ * ContentController extension that inserts configured snippets
  */
-class TagInserter implements HTTPMiddleware
+class TagInserter extends Extension
 {
 
-    public function process(HTTPRequest $request, callable $delegate)
+    public function afterCallActionHandler(HTTPRequest $request, $action, DBField $response)
     {
-        $response = $delegate($request);
-
-        $response->setBody($this->updateHTML($response->getBody()));
-
+        $response->setValue($this->insertSnippetsIntoHTML($response->getValue(), $this->owner->data()));
         return $response;
     }
 
-    public function updateHTML($html)
+    protected function insertSnippetsIntoHTML($html)
     {
         // TO DO: work out how to get info on current page
         $snippets = Snippet::get()->filter(['Active' => 'on']);

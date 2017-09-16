@@ -1,14 +1,6 @@
 ---
 Name: tagmanager
-After: '*'
-Before: 'modelascontrollerroutes'
 ---
-SilverStripe\Core\Injector\Injector:
-  SilverStripe\CMS\Controllers\ModelAsController:
-    properties:
-      Middlewares:
-        TagInserter: '%$SilverStripe\TagManager\Middleware\TagInserter'
-  SilverStripe\CMS\Controllers\RootURLController:
-    properties:
-      Middlewares:
-        TagInserter: '%$SilverStripe\TagManager\Middleware\TagInserter'
+SilverStripe\CMS\Controllers\ContentController:
+  extensions:
+   - SilverStripe\TagManager\Extension\TagInserter
