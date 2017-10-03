@@ -1,7 +1,7 @@
 {
     "name": "sminnee/tagmanager",
     "description": "SilverStripe's server-side answer to Google/Adobe Tag Manager",
-    "type": "silverstripe-module",
+    "type": "silverstripe-vendormodule",
     "require": {
         "silverstripe/cms": "^4"
     },
