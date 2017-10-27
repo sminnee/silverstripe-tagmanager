@@ -1,5 +1,4 @@
-SilverStripe Tag Manager
-========================
+# SilverStripe Tag Manager
 
 SilverStripe's server-side answer to Google/Adobe Tag Manager!
 
