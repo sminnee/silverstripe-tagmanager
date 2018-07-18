@@ -3,7 +3,7 @@
     "description": "SilverStripe's server-side answer to Google/Adobe Tag Manager",
     "type": "silverstripe-module",
     "require": {
-        "silverstripe/cms": "^3"
+        "silverstripe/framework": "^3"
     },
     "require-dev": {
         "phpunit/phpunit": "^5"
@@ -14,5 +14,10 @@
             "name": "Sam Minnee",
             "email": "sam@silverstripe.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "SilverStripe\\TagManager\\": "src"
+        }
+    }
 }

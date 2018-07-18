@@ -1,9 +1,6 @@
 <?php
 
-use DataObject;
 use SilverStripe\TagManager\Admin\ParamExpander;
-use Injector;
-use FieldList;
 
 /**
  * Represents one snippet added to the site with is params configured

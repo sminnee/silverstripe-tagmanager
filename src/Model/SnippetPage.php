@@ -1,8 +1,5 @@
 <?php
 
-use DataObject;
-use SiteTree;
-
 /**
  * Represents the attachment of a configured snippet to a single page or section
  */
