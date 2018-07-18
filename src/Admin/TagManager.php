@@ -2,7 +2,7 @@
 
 namespace SilverStripe\TagManager\Admin;
 
-use SilverStripe\TagManager\Model\Snippet;
+use Snippet;
 use ModelAdmin;
 
 class TagManager extends ModelAdmin

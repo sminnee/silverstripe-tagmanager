@@ -26,8 +26,8 @@ class HtmlSnippetProvider implements SnippetProvider
         ];
 
         return new FieldList(
-            new DropdownField("Zone", "Zone", $zones),
-            new TextAreaField("Content", "HTML Content")
+            new \DropdownField("Zone", "Zone", $zones),
+            new \TextAreaField("Content", "HTML Content")
         );
     }
 

@@ -2,9 +2,9 @@
 
 namespace SilverStripe\TagManager\Extension;
 
-use HTTPRequest;
+use SS_HTTPRequest;
 use Director;
-use SilverStripe\TagManager\Model\Snippet;
+use Snippet;
 use Extension;
 use DBField;
 
@@ -14,9 +14,14 @@ use DBField;
 class TagInserter extends Extension
 {
 
-    public function afterCallActionHandler(HTTPRequest $request, $action, DBField $response)
+    public function afterCallActionHandler(SS_HTTPRequest $request, $action, $response)
     {
-        $response->setValue($this->insertSnippetsIntoHTML($response->getValue(), $this->owner->data()));
+        $context = null;
+        if ($this->owner->hasMethod('data')) {
+            $context =$this->owner->data();
+        }
+
+        $response->setValue($this->insertSnippetsIntoHTML($response->getValue(), $context));
         return $response;
     }
 
@@ -40,19 +45,19 @@ class TagInserter extends Extension
         foreach ($combinedHTML as $k => $v) {
             switch ($k) {
                 case 'start-head':
-                    $html = preg_replace('#(<head[^>]*>)#i', '\\1' . $v, $html);
+                    $html = preg_replace('#(<head( [^>]*)?>)#i', '\\1' . $v, $html);
                     break;
 
                 case 'end-head':
-                    $html = preg_replace('#(</head)#i', $v . '\\1', $html);
+                    $html = preg_replace('#(</head[ >])#i', $v . '\\1', $html);
                     break;
 
                 case 'start-body':
-                    $html = preg_replace('#(<body[^>]*>)#i', '\\1' . $v, $html);
+                    $html = preg_replace('#(<body( [^>]*)?>)#i', '\\1' . $v, $html);
                     break;
 
                 case 'end-body':
-                    $html = preg_replace('#(</body)#i', $v . '\\1', $html);
+                    $html = preg_replace('#(</body[ >])#i', $v . '\\1', $html);
                     break;
             }
         }
