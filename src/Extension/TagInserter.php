@@ -2,12 +2,11 @@
 
 namespace SilverStripe\TagManager\Extension;
 
-use SilverStripe\Control\Middleware\HTTPMiddleware;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Director;
+use HTTPRequest;
+use Director;
 use SilverStripe\TagManager\Model\Snippet;
-use SilverStripe\Core\Extension;
-use SilverStripe\ORM\FieldType\DBField;
+use Extension;
+use DBField;
 
 /**
  * ContentController extension that inserts configured snippets

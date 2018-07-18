@@ -1,10 +1,7 @@
 <?php
 
-namespace SilverStripe\TagManager\Model;
-
-use SilverStripe\ORM\DataObject;
-use SilverStripe\CMS\Model\SiteTree;
-
+use DataObject;
+use SiteTree;
 
 /**
  * Represents the attachment of a configured snippet to a single page or section

@@ -3,8 +3,7 @@
 namespace SilverStripe\TagManager\SnippetProvider;
 
 use SilverStripe\TagManager\SnippetProvider;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms;
+use FieldList;
 
 /**
  * A snippet provider that lets you add arbitrary HTML
@@ -27,8 +26,8 @@ class HtmlSnippetProvider implements SnippetProvider
         ];
 
         return new FieldList(
-            new Forms\DropdownField("Zone", "Zone", $zones),
-            new Forms\TextAreaField("Content", "HTML Content")
+            new DropdownField("Zone", "Zone", $zones),
+            new TextAreaField("Content", "HTML Content")
         );
     }
 
