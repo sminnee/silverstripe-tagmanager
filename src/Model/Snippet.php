@@ -32,7 +32,11 @@ class Snippet extends DataObject
 
     public function getTitle()
     {
-        return $this->getSnippetProvider()->getTitle();
+        try {
+            return $this->getSnippetProvider()->getTitle();
+        } catch (\ReflectionException $e) {
+            return "(unconfigured)";
+        }
     }
 
     public function getSnippetSummary()
@@ -61,10 +65,12 @@ class Snippet extends DataObject
         $fields->dataFieldByName('Active')->setSource(self::$active_labels);
 
         $providerFields = null;
-        if ($provider = $this->getSnippetProvider()) {
-            $providerFields = $provider->getParamFields();
+        if (class_exists($this->SnippetClass)) {
+            if ($provider = $this->getSnippetProvider()) {
+                $providerFields = $provider->getParamFields();
+            }
+            $this->expandParams('SnippetParams', $providerFields, $fields, 'Root.Main');
         }
-        $this->expandParams('SnippetParams', $providerFields, $fields, 'Root.Main');
 
         return $fields;
     }
