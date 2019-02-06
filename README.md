@@ -23,3 +23,7 @@ Out of the box the following snippets are available
 
  * Raw HTML, added to the head or the end of the body
  * Metatag
+
+## Add-on modules
+
+Tag Manager is only as useful as its extension modules, have a look at [modules that list it as a dependency](https://packagist.org/packages/sminnee/tagmanager/dependents) to get some inspiration!
