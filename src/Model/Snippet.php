@@ -6,6 +6,9 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\TagManager\Admin\ParamExpander;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Core\ClassInfo;
 
 /**
  * Represents one snippet added to the site with is params configured
@@ -14,6 +17,8 @@ class Snippet extends DataObject
 {
 
     use ParamExpander;
+
+    private static $singular_name = "Tag";
 
     private static $db = [
         "SnippetClass" => "Varchar(255)",
@@ -26,8 +31,8 @@ class Snippet extends DataObject
     ];
 
     private static $summary_fields = [
-        "SnippetSummary",
-        "ActiveLabel",
+        "SnippetSummary" => ["title" => "Tag"],
+        "ActiveLabel" => ["title" => "Active"],
     ];
 
     private static $active_labels = [
@@ -37,12 +42,20 @@ class Snippet extends DataObject
 
     public function getTitle()
     {
-        return $this->getSnippetProvider()->getTitle();
+        $provider = $this->getSnippetProvider();
+        if ($provider) {
+            return $provider->getTitle();
+        }
+        return "(Unconfigured tag)";
     }
 
     public function getSnippetSummary()
     {
-        return $this->getSnippetProvider()->getSummary(json_decode($this->SnippetParams, true));
+        $provider = $this->getSnippetProvider();
+        if ($provider) {
+            return $provider->getSummary((array)json_decode($this->SnippetParams, true));
+        }
+        return "(Unconfigured tag)";
     }
 
     public function getActiveLabel() {
@@ -59,9 +72,27 @@ class Snippet extends DataObject
         }
     }
 
+    /**
+     * Return the snippet provider attached to this record
+     */
+    protected function getSnippetTypes()
+    {
+        $types = [];
+        foreach (ClassInfo::implementorsOf('SilverStripe\TagManager\SnippetProvider') as $class) {
+            $types[$class] = Injector::inst()->get($class)->getTitle();
+        }
+        return $types;
+    }
+
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+
+        $fields->addFieldToTab('Root.Main', (new DropdownField(
+            'SnippetClass',
+            'Tag type',
+            $this->getSnippetTypes()
+        ))->setEmptyString('(Choose tag type)'));
 
         $fields->dataFieldByName('Active')->setSource(self::$active_labels);
 
@@ -72,6 +103,11 @@ class Snippet extends DataObject
         $this->expandParams('SnippetParams', $providerFields, $fields, 'Root.Main');
 
         return $fields;
+    }
+
+    public function getCMSValidator()
+    {
+        return new RequiredFields('SnippetClass');
     }
 
     /**

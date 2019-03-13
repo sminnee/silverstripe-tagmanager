@@ -7,6 +7,9 @@ use SilverStripe\Admin\ModelAdmin;
 
 class TagManager extends ModelAdmin
 {
+
+    public $showImportForm = false;
+
     private static $managed_models = [ Snippet::class ];
 
     private static $menu_title = 'Tag Manager';

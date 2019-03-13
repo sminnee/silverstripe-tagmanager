@@ -34,7 +34,11 @@ class HtmlSnippetProvider implements SnippetProvider
 
     public function getSummary(array $params)
     {
-        return $this->getTitle() . " in  " . $params['Zone'];
+        if (!empty($params['Zone'])) {
+            return $this->getTitle() . " in  " . $params['Zone'];
+        } else {
+            return $this->getTitle();
+        }
     }
 
     public function getSnippets(array $params)
