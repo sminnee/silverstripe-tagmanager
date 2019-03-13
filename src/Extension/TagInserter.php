@@ -55,6 +55,9 @@ class TagInserter extends Extension
                 case 'end-body':
                     $html = preg_replace('#(</body)#i', $v . '\\1', $html);
                     break;
+
+                default:
+                    user_error("Unknown snippet zone '$k'; ignoring", E_USER_WARNING);
             }
         }
 
