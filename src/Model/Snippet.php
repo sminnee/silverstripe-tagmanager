@@ -24,6 +24,7 @@ class Snippet extends DataObject
         "SnippetClass" => "Varchar(255)",
         "SnippetParams" => "Text",
         "Active" => "Enum('on,off,partial', 'on')",
+        "Sort" => "Int",
     ];
 
     private static $has_many = [
@@ -39,6 +40,8 @@ class Snippet extends DataObject
         'on' => 'Enabled',
         'off' => 'Disabled',
     ];
+
+    private static $default_sort = "Sort";
 
     public function getTitle()
     {
@@ -95,6 +98,8 @@ class Snippet extends DataObject
         ))->setEmptyString('(Choose tag type)'));
 
         $fields->dataFieldByName('Active')->setSource(self::$active_labels);
+
+        $fields->removeByName('Sort');
 
         $providerFields = null;
         if ($provider = $this->getSnippetProvider()) {
