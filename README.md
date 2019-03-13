@@ -12,17 +12,19 @@ the Tag Manager admin section to enable and configure these snippets.
 
  * Developers of SilverStripe modules that add front-end snippets to each page can write less code
  * Different snippets can be configured & actvitated by CMS administrators
+ * Don't need to coordinate a developer release to get snippets added or removed
+ * Unused snippets can be disabled by the administrator, reducing page weight
 
 ## Features
 
  * Add site-wide snippets
- * Add section-specific or page-specific snippets
- * Build custom snippets by implementing the SnippetProvider interface provided
+ * Add section-specific or page-specific snippets (coming soon)
+ * Developers: Build custom snippets by implementing the SnippetProvider interface provided
 
 Out of the box the following snippets are available
 
  * Raw HTML, added to the head or the end of the body
- * Metatag
+ * Google Analytics
 
 ## Add-on modules
 
