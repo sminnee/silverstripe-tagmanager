@@ -25,7 +25,25 @@ Out of the box the following snippets are available
 
  * Raw HTML, added to the head or the end of the body
  * Google Analytics
+ * Google Tag Manager
+ * [Crazy Egg](https://www.crazyegg.com/)
 
 ## Add-on modules
 
 Tag Manager is only as useful as its extension modules, have a look at [modules that list it as a dependency](https://packagist.org/packages/sminnee/tagmanager/dependents) to get some inspiration!
+
+## Creating your own tag
+
+To create a new type of tag, you will need to write a PHP class that implements the `SilverStripe\TagManager\SnippetProvider` interface. A simple example is [GoogleAnalyticsSnippetProvider](src/SnippetProvider/GoogleAnalyticsSnippetProvider.php).
+
+Your class will need the following methods for helping configure the admin UI:
+
+ *  `getTitle()`: Return the title of this snippet provider for admin UIs
+ *  `getSummary(array $params)`: Return a short description of the configured snippet. Params will be an map of param name => param value
+ *  `getParamFields()`: Return a `FieldList` for configuring the snippet. Each field should return a scalar value, so no GridFields sorry!
+
+And this method to actually generate the snippet:
+
+ * `getSnippets(array $params)`: Return an map of snippet "zone" to snippet content.
+
+Each snippet should be placed in a "zone". Zones are predefined insertion points within the overall page. Allowed zones are "start-head", "end-head", "start-body", "end-body". Your snippet provider can return more than 1 of these.
