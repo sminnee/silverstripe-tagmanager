@@ -15,5 +15,10 @@
             "name": "Sam Minnee",
             "email": "sam@silverstripe.com"
         }
-    ]
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
 }
