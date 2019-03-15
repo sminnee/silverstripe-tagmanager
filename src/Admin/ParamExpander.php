@@ -17,7 +17,10 @@ trait ParamExpander
             foreach ($paramFields as $field) {
                 $name = "COMPOUND_{$modelField}_" . $field->getName();
                 $field->setName($name);
-                $field->setValue($this->getField($name));
+                $value = $this->getField($name);
+                if ($value !== null) {
+                    $field->setValue($value);
+                }
                 if ($tabName) {
                     $fields->addFieldToTab($tabName, $field);
                 } else {

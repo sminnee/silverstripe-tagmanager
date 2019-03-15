@@ -21,10 +21,11 @@ class GoogleTagManagerSnippetProvder implements SnippetProvider
     public function getParamFields()
     {
 
-        $imgSrc = ModuleResourceLoader::singleton()->resolvePath('sminnee/tagmanager:client/img/gtm-guide.png');
+        $imgSrc = ModuleResourceLoader::singleton()->resolveURL('sminnee/tagmanager:client/img/gtm-guide.png');
 
         return new FieldList(
-            (new Forms\TextField("GTMID", "GTM ID"))->setDescription("Will look like 'GTM-XXXXXX'")
+            (new Forms\TextField("GTMID", "GTM ID"))->setDescription("Will look like 'GTM-XXXXXX'"),
+            new Forms\LiteralField("HelpImage", "<p><img src=\"$imgSrc\" style=\"width: 100%; border-radius: 30px; box-shadow: 2px 2px 20px #CCC;\"></p>")
         );
 
     }
