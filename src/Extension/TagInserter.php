@@ -41,19 +41,19 @@ class TagInserter extends Extension
         foreach ($combinedHTML as $k => $v) {
             switch ($k) {
                 case 'start-head':
-                    $html = preg_replace('#(<head[^>]*>)#i', '\\1' . $v, $html);
+                    $html = preg_replace('#(<head(>+|[\s]+(.*)?>))#i', '\\1' . $v, $html);
                     break;
 
                 case 'end-head':
-                    $html = preg_replace('#(</head)#i', $v . '\\1', $html);
+                    $html = preg_replace('#(<\head(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
                     break;
 
                 case 'start-body':
-                    $html = preg_replace('#(<body[^>]*>)#i', '\\1' . $v, $html);
+                    $html = preg_replace('#(<body(>+|[\s]+(.*)?>))#i', '\\1' . $v, $html);
                     break;
 
                 case 'end-body':
-                    $html = preg_replace('#(</body)#i', $v . '\\1', $html);
+                    $html = preg_replace('#(<\body(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
                     break;
 
                 default:
