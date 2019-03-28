@@ -45,7 +45,7 @@ class TagInserter extends Extension
                     break;
 
                 case 'end-head':
-                    $html = preg_replace('#(<\head(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
+                    $html = preg_replace('#(</head(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
                     break;
 
                 case 'start-body':
@@ -53,7 +53,7 @@ class TagInserter extends Extension
                     break;
 
                 case 'end-body':
-                    $html = preg_replace('#(<\body(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
+                    $html = preg_replace('#(</body(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
                     break;
 
                 default:
