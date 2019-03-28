@@ -11,6 +11,7 @@ use SilverStripe\CMS\Model\SiteTree;
  */
 class SnippetPage extends DataObject
 {
+    private static $table_name = 'SnippetPage';
 
     private static $db = [
         "AppliesTo" => "Enum('section,page', 'section')",
