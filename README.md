@@ -20,6 +20,7 @@ the Tag Manager admin section to enable and configure these snippets.
  * Add site-wide snippets
  * Add section-specific or page-specific snippets (coming soon)
  * Developers: Build custom snippets by implementing the SnippetProvider interface provided
+ * Control which snippet types are available
 
 Out of the box the following snippets are available
 
@@ -27,6 +28,19 @@ Out of the box the following snippets are available
  * Google Analytics
  * Google Tag Manager
  * [Crazy Egg](https://www.crazyegg.com/)
+
+### Disabling Snippet Types
+
+If you're a developer you may need to disable some of the snippet types you haven't tested or that your client explicitly doesn't want available in the CMS. You can do this via configuration:
+
+```yaml
+SilverStripe\TagManager\Model\Snippet:
+  disabled_types:
+    - 'SilverStripe\TagManager\SnippetProvider\HtmlSnippetProvider'
+    - 'SilverStripe\TagManager\SnippetProvider\CrazyEggSnippetProvider'
+```
+
+This will disable the HTML & Crazy Egg snippets.
 
 ## Add-on modules
 
