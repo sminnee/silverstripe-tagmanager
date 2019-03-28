@@ -2,13 +2,14 @@
 
 namespace SilverStripe\TagManager\Model;
 
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\TagManager\Admin\ParamExpander;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\TagManager\SnippetProvider;
+use SilverStripe\TagManager\Admin\ParamExpander;
 
 /**
  * Represents one snippet added to the site with is params configured
@@ -44,6 +45,14 @@ class Snippet extends DataObject
 
     private static $default_sort = "Sort";
 
+    /**
+     * A list of disabled tag types. These can be added on a per project basis
+     * to limit the amount of types available to  the content author.
+     *
+     * @var array
+     */
+    private static $disabled_types = [];
+
     public function getTitle()
     {
         $provider = $this->getSnippetProvider();
@@ -63,7 +72,7 @@ class Snippet extends DataObject
     }
 
     public function getActiveLabel() {
-        return self::$active_labels[$this->Active];
+        return $this->config()->active_labels[$this->Active];
     }
 
     /**
@@ -85,10 +94,27 @@ class Snippet extends DataObject
     protected function getSnippetTypes()
     {
         $types = [];
-        foreach (ClassInfo::implementorsOf('SilverStripe\TagManager\SnippetProvider') as $class) {
-            $types[$class] = Injector::inst()->get($class)->getTitle();
+
+        foreach (ClassInfo::implementorsOf(SnippetProvider::class) as $class) {
+            if ($this->isAllowedType($class)) {
+                $types[$class] = Injector::inst()->get($class)->getTitle();
+            }
         }
+
         return $types;
+    }
+
+    /**
+     * Checks if the given class is allowed to be used by the content author.
+     *
+     * @param string $class
+     * @return boolean
+     */
+    private function isAllowedType($class)
+    {
+        $disabled = $this->config()->disabled_types;
+
+        return !is_array($disabled) || !in_array($class, $disabled);
     }
 
     public function getCMSFields()
@@ -101,7 +127,7 @@ class Snippet extends DataObject
             $this->getSnippetTypes()
         ))->setEmptyString('(Choose tag type)'));
 
-        $fields->dataFieldByName('Active')->setSource(self::$active_labels);
+        $fields->dataFieldByName('Active')->setSource($this->config()->active_labels);
 
         $fields->removeByName('Sort');
 
@@ -109,6 +135,7 @@ class Snippet extends DataObject
         if ($provider = $this->getSnippetProvider()) {
             $providerFields = $provider->getParamFields();
         }
+
         $this->expandParams('SnippetParams', $providerFields, $fields, 'Root.Main');
 
         return $fields;
