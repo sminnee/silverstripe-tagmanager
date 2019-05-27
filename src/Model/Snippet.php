@@ -100,7 +100,7 @@ class Snippet extends DataObject
                 $types[$class] = Injector::inst()->get($class)->getTitle();
             }
         }
-
+        asort($types);
         return $types;
     }
 
