@@ -15,9 +15,11 @@ use SilverStripe\ORM\FieldType\DBField;
 class TagInserter extends Extension
 {
 
-    public function afterCallActionHandler(HTTPRequest $request, $action, DBField $response)
+    public function afterCallActionHandler(HTTPRequest $request, $action, $response)
     {
-        $response->setValue($this->insertSnippetsIntoHTML($response->getValue(), $this->owner->data()));
+        if ($response instanceof DBField) {
+            $response->setValue($this->insertSnippetsIntoHTML($response->getValue(), $this->owner->data()));
+        }
         return $response;
     }
 
