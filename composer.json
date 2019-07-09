@@ -3,7 +3,7 @@
     "description": "SilverStripe's server-side answer to Google/Adobe Tag Manager",
     "type": "silverstripe-vendormodule",
     "require": {
-        "silverstripe/cms": "^4",
+        "silverstripe/cms": "^4.3",
         "symbiote/silverstripe-gridfieldextensions": "^3"
     },
     "require-dev": {
