@@ -17,6 +17,8 @@ class TagManager extends ModelAdmin
 
     private static $url_segment = 'tagmanager';
 
+    private static $menu_icon_class = 'font-icon-database font-icon-integration';
+
     public function getEditForm($id = null, $fields = null)
     {
         $fields = parent::getEditForm();
