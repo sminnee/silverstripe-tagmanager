@@ -95,7 +95,7 @@ HTML;
         }
 
         return [
-            'start-head' => $snippet,
+            self::ZONE_HEAD_START => $snippet,
         ];
     }
 }

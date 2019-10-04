@@ -55,7 +55,7 @@ HTML;
         $content = str_replace("\n", "", $content);
 
         return [
-            'start-head' => $content,
+            self::ZONE_HEAD_START => $content
         ];
     }
 }

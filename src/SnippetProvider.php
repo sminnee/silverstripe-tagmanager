@@ -9,6 +9,33 @@ namespace SilverStripe\TagManager;
  */
 interface SnippetProvider
 {
+    /**
+     * Beginning of the head tag
+     *
+     * @var string
+     */
+    const ZONE_HEAD_START = 'start-head';
+
+    /**
+     * Right before closing the head tag
+     *
+     * @var string
+     */
+    const ZONE_HEAD_END = 'end-head';
+
+    /**
+     * Beginning of the document body tag
+     *
+     * @var string
+     */
+    const ZONE_BODY_START = 'start-body';
+
+    /**
+     * Right before closing the document body tag
+     *
+     * @var string
+     */
+    const ZONE_BODY_END = 'end-body';
 
     /**
      * Return the title of this snippet provider for admin UIs
@@ -32,7 +59,7 @@ interface SnippetProvider
      * Return the snippets to insert into page.
      *
      * Each snippet should be placed in a "zone". Zones are predefined insertion points within the overall page.
-     * Allowed zones are "start-head", "end-head", "start-body", "end-body".
+     * Allowed zones are defined by the interface constants ZONE_*.
      *
      * @param $params A map of parameters to configure the snippet provider with. The keys passed must correspond to
      *                the names of the fields returned by getParamFields().

@@ -66,8 +66,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 HTML;
 
         return [
-            'start-head' => $head,
-            'start-body' => $body,
+            self::ZONE_HEAD_START => $head,
+            self::ZONE_BODY_START => $body,
         ];
     }
 }

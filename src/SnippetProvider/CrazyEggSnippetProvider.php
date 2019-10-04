@@ -63,7 +63,7 @@ class CrazyEggSnippetProvider implements SnippetProvider
 HTML;
 
         return [
-            'start-head' => $head,
+            self::ZONE_HEAD_START => $head,
         ];
     }
 }

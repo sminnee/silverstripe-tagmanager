@@ -3,8 +3,9 @@
 namespace SilverStripe\TagManager\Tests;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\TagManager\Model\Snippet;
 use SilverStripe\TagManager\Extension\TagInserter;
+use SilverStripe\TagManager\Model\Snippet;
+use SilverStripe\TagManager\SnippetProvider;
 use SilverStripe\TagManager\SnippetProvider\HtmlSnippetProvider;
 use ReflectionMethod;
 
@@ -17,10 +18,10 @@ class TagInserterTest extends SapphireTest
         parent::setUp();
 
         $targets = [
-            'start-head' => '<!-- START HEAD -->',
-            'end-head' => '<!-- END HEAD -->',
-            'start-body' => '<!-- START BODY -->',
-            'end-body' => '<!-- END BODY -->',
+            SnippetProvider::ZONE_HEAD_START => '<!-- START HEAD -->',
+            SnippetProvider::ZONE_HEAD_END => '<!-- END HEAD -->',
+            SnippetProvider::ZONE_BODY_START => '<!-- START BODY -->',
+            SnippetProvider::ZONE_BODY_END => '<!-- END BODY -->',
         ];
 
         foreach ($targets as $zone => $content) {
