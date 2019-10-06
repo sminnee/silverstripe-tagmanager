@@ -2,12 +2,15 @@
 
 namespace SilverStripe\TagManager\Extension;
 
+use Prs\Log\LoggerInterface;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Middleware\HTTPMiddleware;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Director;
-use SilverStripe\TagManager\Model\Snippet;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\TagManager\Model\Snippet;
+use SilverStripe\TagManager\SnippetProvider;
 
 /**
  * ContentController extension that inserts configured snippets
@@ -30,8 +33,30 @@ class TagInserter extends Extension
 
         $combinedHTML = [];
 
+        $logger = null;
+        if (Injector::inst()->has(LoggerInterface::class)) {
+            $logger = Injector::inst()->get(LoggerInterface::class);
+        }
+
         foreach ($snippets as $snippet) {
-            $thisHTML = $snippet->getSnippets();
+            try {
+                $thisHTML = $snippet->getSnippets();
+            } catch (\InvalidArgumentException $e) {
+                $message = sprintf(
+                    "Misconfigured snippet %s: %s",
+                    $snippet->getTitle(),
+                    $e->getMessage()
+                );
+
+                if ($logger) {
+                    $logger->warning($message, ['exception' => $e]);
+                } else {
+                    user_error($message, E_USER_WARNING);
+                }
+
+                continue;
+            }
+
             foreach ($thisHTML as $k => $v) {
                 if (!isset($combinedHTML[$k])) {
                     $combinedHTML[$k] = "";
@@ -42,24 +67,29 @@ class TagInserter extends Extension
 
         foreach ($combinedHTML as $k => $v) {
             switch ($k) {
-                case 'start-head':
+                case SnippetProvider::ZONE_HEAD_START:
                     $html = preg_replace('#(<head(>+|[\s]+(.*)?>))#i', '\\1' . $v, $html);
                     break;
 
-                case 'end-head':
+                case SnippetProvider::ZONE_HEAD_END:
                     $html = preg_replace('#(</head(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
                     break;
 
-                case 'start-body':
+                case SnippetProvider::ZONE_BODY_START:
                     $html = preg_replace('#(<body(>+|[\s]+(.*)?>))#i', '\\1' . $v, $html);
                     break;
 
-                case 'end-body':
+                case SnippetProvider::ZONE_BODY_END:
                     $html = preg_replace('#(</body(>+|[\s]+(.*)?>))#i', $v . '\\1', $html);
                     break;
 
                 default:
-                    user_error("Unknown snippet zone '$k'; ignoring", E_USER_WARNING);
+                    $message = "Unknown snippet zone '$k'; ignoring";
+                    if ($logger) {
+                        $logger->warning($message, ['exception' => $e]);
+                    } else {
+                        user_error($message, E_USER_WARNING);
+                    }
             }
         }
 

@@ -35,7 +35,7 @@ class Snippet extends DataObject
 
     private static $summary_fields = [
         "SnippetSummary" => ["title" => "Tag"],
-        "ActiveLabel" => ["title" => "Active"],
+        "ActiveLabel" => ["title" => "Status"],
     ];
 
     private static $active_labels = [
@@ -66,12 +66,19 @@ class Snippet extends DataObject
     {
         $provider = $this->getSnippetProvider();
         if ($provider) {
-            return $provider->getSummary((array)json_decode($this->SnippetParams, true));
+            return $provider->getSummary((array) json_decode($this->SnippetParams, true));
         }
         return "(Unconfigured tag)";
     }
 
-    public function getActiveLabel() {
+    public function getActiveLabel()
+    {
+        try {
+            $this->getSnippets();
+        } catch (\InvalidArgumentException $e) {
+            return sprintf("Inactive: %s", $e->getMessage());
+        }
+
         return $this->config()->active_labels[$this->Active];
     }
 

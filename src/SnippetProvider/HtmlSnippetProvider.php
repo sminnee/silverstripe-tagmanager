@@ -20,10 +20,10 @@ class HtmlSnippetProvider implements SnippetProvider
     public function getParamFields()
     {
         $zones = [
-            "start-head" => "After <HEAD>",
-            "end-head" => "Before </HEAD>",
-            "start-body" => "After <BODY>",
-            "end-body" => "Before </BODY>",
+            self::ZONE_HEAD_START => "After <HEAD>",
+            self::ZONE_HEAD_END => "Before </HEAD>",
+            self::ZONE_BODY_START => "After <BODY>",
+            self::ZONE_BODY_END => "Before </BODY>",
         ];
 
         return new FieldList(
