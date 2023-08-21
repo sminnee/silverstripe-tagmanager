@@ -34,7 +34,7 @@ trait ParamExpander
         // Compound field handler
         if(substr($key,0,9)=='COMPOUND_') {
             list($dummy, $field, $subfield) = explode('_', $key, 3);
-            $json = json_decode(parent::getField($field), true);
+            $json = json_decode(parent::getField($field) ?? '', true);
             if(isset($json[$subfield])) return $json[$subfield];
 
         } else {
@@ -46,7 +46,7 @@ trait ParamExpander
         // Compound field handler
         if(substr($key,0,9)=='COMPOUND_') {
             list($dummy, $field, $subfield) = explode('_', $key, 3);
-            $json = json_decode(parent::getField($field), true);
+            $json = json_decode(parent::getField($field) ?? '', true);
             $json[$subfield] = $val;
             return parent::setField($field, json_encode($json));
 
