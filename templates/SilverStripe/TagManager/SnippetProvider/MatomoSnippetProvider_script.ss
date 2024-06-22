@@ -1,7 +1,7 @@
 <script>
+  var settings = {"showIntro":true,"divId":"matomo-opt-out","cookiePath":"","cookieDomain":"","cookieSameSite":"Lax","OptOutComplete":"Opt-out complete","snip":"snip"};
   var _paq = window._paq = window._paq || [];
-  
-  <% if $DoNotTrack %>_paq.push(["setDoNotTrack", true]);<% end_if %>
+
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
 

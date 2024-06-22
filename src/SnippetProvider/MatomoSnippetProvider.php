@@ -3,6 +3,7 @@
 namespace SilverStripe\TagManager\SnippetProvider;
 
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use SilverStripe\TagManager\SnippetProvider;
@@ -13,6 +14,13 @@ use SilverStripe\View\ArrayData;
  */
 class MatomoSnippetProvider implements SnippetProvider
 {
+    const OPT_OUT_NONE = 'none';
+
+    const OPT_OUT_LOCATIONS = [
+        self::OPT_OUT_NONE => 'None',
+        self::ZONE_BODY_START => 'Top',
+        self::ZONE_BODY_END => 'Bottom'
+    ];
 
     public function getTitle()
     {
@@ -30,10 +38,11 @@ class MatomoSnippetProvider implements SnippetProvider
                 'SiteID',
                 _t(static::class . '.SiteID', 'Site ID')
             ),
-            CheckboxField::create(
-                'DoNotTrack',
-                _t(static::class . 'DoNotTrack', 'Honor Do Not Track headers')
-            )->setDescription('https://en.wikipedia.org/wiki/Do_Not_Track'),
+            DropdownField::create(
+                'OptOut',
+                _t(static::class . 'OptOut', 'Generate opt-out notice'),
+                self::OPT_OUT_LOCATIONS
+            ),
             CheckboxField::create(
                 'DisableCookies',
                 _t(static::class . 'DisableCookies', 'Disable all tracking cookies')
@@ -59,14 +68,11 @@ class MatomoSnippetProvider implements SnippetProvider
             throw new \InvalidArgumentException("Please supply Site ID");
         }
 
-        $dnt = false;
+        $optout  = self::OPT_OUT_NONE;
         $cookies = true;
 
-        if (
-            !empty($params['DoNotTrack'])
-            && (bool)$params['DoNotTrack'] === true
-        ) {
-            $dnt = true;
+        if (!empty($params['OptOut'])) {
+            $optout = $params['OptOut'];
         }
 
         if (
@@ -84,7 +90,6 @@ class MatomoSnippetProvider implements SnippetProvider
         $data = ArrayData::create([
             'URL' => $url,
             'SiteID' => $site_id,
-            'DoNotTrack' => $dnt,
             'Cookies' => $cookies
         ]);
 
@@ -94,9 +99,27 @@ class MatomoSnippetProvider implements SnippetProvider
         $noscript = $data->renderWith(static::class . '_noscript');
         $noscript = str_replace("\n", "", $noscript);
 
+        $notice = "";
+        $body_start = "";
+        $body_end = "";
+
+        if ($optout != self::OPT_OUT_NONE) {
+            $notice = $data->renderWith(static::class . '_optout');
+        }
+
+        if ($optout === self::ZONE_BODY_START) {
+            $body_start = $notice;
+            $body_end = $noscript;
+        }
+
+        if ($optout === self::ZONE_BODY_END) {
+            $body_end = $notice . $noscript;
+        }
+
         return [
             self::ZONE_HEAD_START => $script,
-            self::ZONE_BODY_END => $noscript
+            self::ZONE_BODY_START => $body_start,
+            self::ZONE_BODY_END => $body_end
         ];
     }
 }
