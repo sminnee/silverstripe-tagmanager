@@ -82,8 +82,9 @@ class MatomoSnippetProvider implements SnippetProvider
             $cookies = false;
         }
 
-        // Strip out any http/https
+        // Strip out any http/https and remove trailing slashes
         $url = preg_replace('#^[^:/.]*[:/]+#i', '', $params['AnalyticsURL']);
+        $url = rtrim($url,"/");
         // Sanitise the ID
         $site_id = preg_replace('[^A-Za-z0-9_\-]', '', $params['SiteID']);
 
