@@ -66,7 +66,7 @@ class Snippet extends DataObject
     {
         $provider = $this->getSnippetProvider();
         if ($provider) {
-            return $provider->getSummary((array) json_decode($this->SnippetParams, true));
+            return $provider->getSummary((array) json_decode($this->SnippetParams ?? '', true));
         }
         return "(Unconfigured tag)";
     }
@@ -161,7 +161,7 @@ class Snippet extends DataObject
     public function getSnippets()
     {
         if ($provider = $this->getSnippetProvider()) {
-            $params = (array)json_decode($this->SnippetParams, true);
+            $params = (array)json_decode($this->SnippetParams ?? '', true);
             return $provider->getSnippets($params);
         }
 
