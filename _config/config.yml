@@ -1,6 +1,6 @@
 ---
 Name: tagmanager
 ---
-SilverStripe\CMS\Controllers\ContentController:
+SilverStripe\Control\RequestHandler:
   extensions:
    - SilverStripe\TagManager\Extension\TagInserter

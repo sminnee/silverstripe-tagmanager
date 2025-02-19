@@ -3,26 +3,70 @@
 namespace SilverStripe\TagManager\Extension;
 
 use Prs\Log\LoggerInterface;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\Middleware\HTTPMiddleware;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Director;
+use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Core\Extension;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\TagManager\Model\Snippet;
 use SilverStripe\TagManager\SnippetProvider;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\DevBuildController;
+use SilverStripe\Dev\DevelopmentAdmin;
+use SilverStripe\Security\Security;
 
 /**
  * ContentController extension that inserts configured snippets
  */
 class TagInserter extends Extension
 {
+    /**
+     * List of controllers that will be ignored by
+     * by TagInserter globally.
+     * 
+     * NOTE: TagInsert will ignore ALL instances of
+     * the below controllers.
+     * 
+     * @var array
+     */
+    private static $ignored_controllers = [
+        LeftAndMain::class,
+        DevBuildController::class,
+        DevelopmentAdmin::class,
+        Security::class
+    ];
 
     public function afterCallActionHandler(HTTPRequest $request, $action, $response)
     {
-        if ($response instanceof DBField) {
-            $response->setValue($this->insertSnippetsIntoHTML($response->getValue(), $this->owner->data()));
+        /** @var Controller */
+        $owner = $this->getOwner();
+        $ignored = Config::inst()
+            ->get(static::class, 'ignored_controllers');
+
+        if (!$owner instanceof Controller) {
+            return $response;
         }
+
+        foreach ($ignored as $baseclass) {
+            if (is_a($owner, $baseclass)) {
+                return $response;
+            }
+        }
+
+        $data = null;
+
+        if ($owner->hasMethod('data')) {
+            $data = $owner->data();
+        }
+
+        if ($response instanceof DBField) {
+            $response->setValue(
+                $this->insertSnippetsIntoHTML($response->getValue()),
+                $data
+            );
+        }
+
         return $response;
     }
 
